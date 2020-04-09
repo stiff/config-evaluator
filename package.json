@@ -1,0 +1,11 @@
+{
+  "name": "@cstiff/config-evaluator",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "acorn": "^7.1.1"
+  },
+  "devDependencies": {}
+}
