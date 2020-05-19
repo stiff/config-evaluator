@@ -9,6 +9,7 @@ const evcon = (src, ctx) => {
     '*': (l, r) => l * r,
     '/': (l, r) => l / r,
     '==': (l, r) => l == r,
+    '===': (l, r) => l === r,
 
     _unknown(l, r, op) {
       throw new Error("Unknown operator " + op);
@@ -29,6 +30,7 @@ const evcon = (src, ctx) => {
     ObjectExpression: ({ properties }) =>
       Object.fromEntries(properties.map(({ key, value }) => [key.name, evnode(value)])),
 
+    ConditionalExpression: ({ test, consequent, alternate }) => evnode(test) ? evnode(consequent) : evnode(alternate),
   };
 
   const evnode = (node) => {
@@ -40,7 +42,7 @@ const evcon = (src, ctx) => {
     }
   };
 
-  return evnode(ast, visitors);
+  return evnode(ast);
 };
 
 module.exports = {
