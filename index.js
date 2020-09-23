@@ -27,6 +27,9 @@ const evcon = (src, ctx) => {
 
     Literal: ({ value }) => value,
 
+    MemberExpression: ({ object, property }) =>
+      evnode(object)[ evnode(property) ],
+
     ObjectExpression: ({ properties }) =>
       Object.fromEntries(properties.map(({ key, value }) => [key.name, evnode(value)])),
 
