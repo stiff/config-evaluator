@@ -4,10 +4,10 @@ const evcon = (src, ctx) => {
   const ast = acorn.parseExpressionAt(src);
 
   const binops = {
-    '+': (l, r) => l + r,
-    '-': (l, r) => l - r,
-    '*': (l, r) => l * r,
-    '/': (l, r) => l / r,
+    '+': (l, r) => Number(l) + Number(r),
+    '-': (l, r) => Number(l) - Number(r),
+    '*': (l, r) => Number(l) * Number(r),
+    '/': (l, r) => Number(l) / Number(r),
     '==': (l, r) => l == r,
     '===': (l, r) => l === r,
 
@@ -26,6 +26,17 @@ const evcon = (src, ctx) => {
     Identifier: ({ name }) => ctx[name],
 
     Literal: ({ value }) => value,
+
+    LogicalExpression: ({ operator, left, right }) => {
+      switch (operator) {
+        case '||':
+          return evnode(left) || evnode(right);
+        case '&&':
+          return evnode(left) && evnode(right);
+        default:
+          throw new Error("Unknown operator ", { operator, left, right });
+      }
+    },
 
     MemberExpression: ({ object, property }) =>
       evnode(object)[ evnode(property) ],
