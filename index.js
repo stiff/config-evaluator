@@ -1,7 +1,7 @@
 const acorn = require('acorn');
 
 const evcon = (src, ctx) => {
-  const ast = acorn.parseExpressionAt(src);
+  const ast = acorn.parseExpressionAt(src, 0, { ecmaVersion: 2020 });
 
   const binops = {
     '+': (l, r) => Number(l) + Number(r),
@@ -42,9 +42,20 @@ const evcon = (src, ctx) => {
       evnode(object)[ evnode(property) ],
 
     ObjectExpression: ({ properties }) =>
-      Object.fromEntries(properties.map(({ key, value }) => [key.name, evnode(value)])),
+      Object.fromEntries(properties.map(({ key, value }) =>
+        [key.name || key.value, evnode(value)])),
 
-    ConditionalExpression: ({ test, consequent, alternate }) => evnode(test) ? evnode(consequent) : evnode(alternate),
+    ConditionalExpression: ({ test, consequent, alternate }) =>
+      evnode(test) ? evnode(consequent) : evnode(alternate),
+
+    UnaryExpression: ({ operator, argument }) => {
+      switch (operator) {
+        case '-':
+          return - evnode(argument);
+        default:
+          throw new Error("Unknown operator ", { operator, left, right });
+      }
+    }
   };
 
   const evnode = (node) => {

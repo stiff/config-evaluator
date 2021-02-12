@@ -14,7 +14,7 @@ Simple module to safely evaluate javascript-like expressions. Useful for user-ed
 ### Example
 
  ```js
- const { evcon } = require("evcon");
+ const { evcon } = require('@vstiff/config-evaluator');
 
 const expr = `{
     ingredients: [
@@ -43,6 +43,3 @@ console.log(evcon(expr, ctx))
 // }
 
  ```
-
-
-
