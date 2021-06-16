@@ -1,12 +1,12 @@
 {
   "name": "@vstiff/config-evaluator",
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "scripts": {
     "test": "jest --watch"
   },
   "dependencies": {
-    "acorn": "^8.0.5"
+    "acorn": "^8.4.0"
   },
   "devDependencies": {
     "jest": "^26.6.3"

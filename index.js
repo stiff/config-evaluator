@@ -23,7 +23,16 @@ const evcon = (src, ctx) => {
     BinaryExpression: ({ left, operator, right }) =>
       (binops[operator] || binops._unknown)(evnode(left), evnode(right), operator),
 
-    Identifier: ({ name }) => ctx[name],
+    CallExpression: ({ callee, arguments }) => {
+      const fx = evnode(callee);
+      if (typeof fx === 'function') {
+        return fx.apply(null, arguments.map(evnode));
+      } else {
+          throw new Error("Cannot call " + callee.name);
+      }
+    },
+
+    Identifier: ({ name }) => ctx.hasOwnProperty(name) ? ctx[name] : null,
 
     Literal: ({ value }) => value,
 
